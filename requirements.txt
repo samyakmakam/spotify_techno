@@ -20,7 +20,7 @@ Flask-WTF==0.14.3
 heroku==0.1.1
 idna==2.10
 ipykernel==5.3.4
-ipython==7.19.0
+ipython
 ipython-genutils==0.2.0
 isort==5.7.0
 itsdangerous==1.1.0
@@ -49,7 +49,7 @@ nest-asyncio==1.4.2
 notebook==6.1.5
 numpy==1.19.5
 packaging==20.4
-pandas==1.2.1
+pandas
 pandocfilters==1.4.3
 parso==0.7.1
 pickle-mixin==1.0.2
@@ -68,7 +68,6 @@ pylint==2.6.0
 PyMsgBox==1.0.9
 pyparsing==2.4.7
 pyperclip==1.8.1
-pypiwin32==223
 PyRect==0.1.4
 pyrsistent==0.17.3
 PyScreeze==0.1.26
