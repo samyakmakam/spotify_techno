@@ -1,24 +1,25 @@
-import os
 from flask import Flask, render_template, request
-import pandas as pd
 import jsonify
+import requests
 import pickle
 import numpy as np
 import sklearn
-import os
-import numpy as np
+from sklearn.preprocessing import StandardScaler
 app = Flask(__name__)
 model = pickle.load(open('rf.pkl', 'rb'))
 @app.route('/',methods=['GET'])
 def Home():
     return render_template('index.html')
 
+
+standard_to = StandardScaler()
 @app.route("/predict", methods=['POST'])
 def predict():
-        hist_user_behavior_is_shuffle = float(request.form['hist_user_behavior_is_shuffle'])
-        hist_user_seek_behavior = float(request.form['hist_user_seek_behavior'])        
-        time_of_day = str(request.form['time_of_day'])  
-        release_condition = str(request.form['release_condition'])
+
+    if request.method == 'POST':
+        
+
+        hist_user_behavior_is_shuffle = float(request.form['hist_user_behavior_is_shuffle'])       
         session_position = float(request.form['session_position'])
         session_length = float(request.form['session_length'])
         context_switch = float(request.form['session_length'])        
@@ -26,9 +27,28 @@ def predict():
         hist_user_behavior_n_seekfwd = float(request.form['hist_user_behavior_n_seekfwd'])                
         hist_user_behavior_n_seekback = float(request.form['hist_user_behavior_n_seekback'])                
         premium = float(request.form['premium'])  
-        context_type = str(request.form['context_type']) 
-        hist_user_behavior_reason_start = str(request.form['hist_user_behavior_reason_start'])     
-        hist_user_behavior_reason_end = str(request.form['hist_user_behavior_reason_end'])
+        context_type_catalog=float(request.form['context_type_catalog'])
+        context_type_charts=float(request.form['context_type_charts'])
+        context_type_editorial_playlist=float(request.form['context_type_editorial_playlist'])
+        context_type_personalized_playlist=float(request.form['context_type_personalized_playlist'])
+        context_type_radio=float(request.form['context_type_radio'])
+        context_type_user_collection=float(request.form['context_type_user_collection'])
+        hist_user_behavior_reason_start_appload = float(request.form['hist_user_behavior_reason_start_appload'])
+        hist_user_behavior_reason_start_backbtn = float(request.form['hist_user_behavior_reason_start_backbtn'])
+        hist_user_behavior_reason_start_clickrow = float(request.form['hist_user_behavior_reason_start_clickrow'])
+        hist_user_behavior_reason_start_endplay = float(request.form['hist_user_behavior_reason_start_endplay'])
+        hist_user_behavior_reason_start_fwdbtn = float(request.form['hist_user_behavior_reason_start_fwdbtn'])
+        hist_user_behavior_reason_start_playbtn = float(request.form['hist_user_behavior_reason_start_playbtn'])
+        hist_user_behavior_reason_start_remote = float(request.form['hist_user_behavior_reason_start_remote'])
+        hist_user_behavior_reason_start_trackdone = float(request.form['hist_user_behavior_reason_start_trackdone'])
+        hist_user_behavior_reason_start_trackerror = float(request.form['hist_user_behavior_reason_start_trackerror'])
+        hist_user_behavior_reason_end_backbtn = float(request.form['hist_user_behavior_reason_end_backbtn'])
+        hist_user_behavior_reason_end_clickrow = float(request.form['hist_user_behavior_reason_end_clickrow'])
+        hist_user_behavior_reason_end_endplay = float(request.form['hist_user_behavior_reason_end_endplay'])
+        hist_user_behavior_reason_end_fwdbtn = float(request.form['hist_user_behavior_reason_end_fwdbtn'])
+        hist_user_behavior_reason_end_logout = float(request.form['hist_user_behavior_reason_end_logout'])
+        hist_user_behavior_reason_end_remote = float(request.form['hist_user_behavior_reason_end_remote'])
+        hist_user_behavior_reason_end_trackdone = float(request.form['hist_user_behavior_reason_end_trackdone'])
         duration = float(request.form['duration'])       
         us_popularity_estimate = float(request.form['us_popularity_estimate'])       
         acousticness = float(request.form['acousticness'])       
@@ -41,10 +61,10 @@ def predict():
         flatness = float(request.form['flatness'])         
         liveness = float(request.form['liveness'])         
         loudness = float(request.form['loudness'])         
-        mechanism = float(request.form['mechanism'])         
+        mechanism = float(request.form['mechanism'])
+        is_major = float(request.form['is_major'])
         organism = float(request.form['organism'])         
         speechiness = float(request.form['speechiness'])         
-        mode = str(request.form['mode'])
         tempo = float(request.form['tempo']) 
         valence = float(request.form['valence']) 
         acoustic_vector_0 = float(request.form['acoustic_vector_0']) 
@@ -55,12 +75,21 @@ def predict():
         acoustic_vector_5 = float(request.form['acoustic_vector_5']) 
         acoustic_vector_6 = float(request.form['acoustic_vector_6']) 
         acoustic_vector_7 = float(request.form['acoustic_vector_7']) 
-        arr=np.array([[ hist_user_behavior_is_shuffle,hist_user_seek_behavior,time_of_day,release_condition,session_position,session_length,context_switch,no_pause_before_play,hist_user_behavior_n_seekfwd,hist_user_behavior_n_seekback,premium,context_type,hist_user_behavior_reason_start,hist_user_behavior_reason_end,duration,us_popularity_estimate,acousticness,beat_strength,bounciness,danceability,dyn_range_mean,energy,instrumentalness,flatness,liveness,loudness,mechanism,organism,speechiness,mode,tempo,valence,acoustic_vector_0,acoustic_vector_1,acoustic_vector_2,acoustic_vector_3,acoustic_vector_4,acoustic_vector_5, acoustic_vector_6,acoustic_vector_7, ]])
-        pred=model.predict(arr)
-        if pred==0:
+
+        prediction=model.predict([[session_position,session_length,context_switch,no_pause_before_play,hist_user_behavior_n_seekfwd,hist_user_behavior_n_seekback,hist_user_behavior_is_shufffle,premium,context_type_catalog,context_type_charts,context_type_editorial_playlist,context_type_personalized_playlist,context_type_radio,context_type_user_collection,
+                                   hist_user_behavior_reason_start_appload,hist_user_behavior_reason_start_backbtn,hist_user_behavior_reason_start_clickrow,hist_user_behavior_reason_start_endplay,
+                                   hist_user_behavior_reason_start_fwdbtn,hist_user_behavior_reason_start_playbtn,hist_user_behavior_reason_start_remote,hist_user_behavior_reason_start_trackdone,
+                                   hist_user_behavior_reason_start_trackerror,hist_user_behavior_reason_end_backbtn,hist_user_behavior_reason_end_clickrow,hist_user_behavior_reason_end_endplay,
+                                   hist_user_behavior_reason_end_fedbtn,hist_user_behavior_reason_end_logout,hist_user_behavior_reason_end_remote,hist_user_behavior_reason_end_trackdone,
+                                   ,duration,us_popularity_estimate,acousticness,beat_strength,bounciness,danceability,dyn_range_mean,energy,instrumentalness,flatness,liveness,loudness,mechanism,is_major,organism,speechiness,tempo,valence,acoustic_vector_0,acoustic_vector_1,acoustic_vector_2,acoustic_vector_3,acoustic_vector_4,acoustic_vector_5, acoustic_vector_6,acoustic_vector_7]]) 
+        p=round(prediction[0],0)
+         
+        if p==0:
             return render_template('index.html',prediction_texts="Based on the given inputs, the song should not be skipped")
-        elif pred==1:
+        else:
             return render_template('index.html',prediction_texts="Based on the given inputs, the song should be skipped")
+    else:
+        return render_template('index.html',prediction_texts="Input error")
 
 if __name__=="__main__":
     app.run(debug=True)
