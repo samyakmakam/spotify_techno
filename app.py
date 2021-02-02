@@ -1,19 +1,23 @@
+import os
 from flask import Flask, render_template, request
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
+import gunicorn
+scaler = StandardScaler()
 import jsonify
 import requests
 import pickle
-import gunicorn
 import numpy as np
 import sklearn
-from sklearn.preprocessing import StandardScaler
+import category_encoders as ce
+import zipfile
+import os
 app = Flask(__name__)
-model = pickle.load(open('rf.pkl', 'rb'))
+model = pickle.load(open('techncolabs_model.pkl', 'rb'))
 @app.route('/',methods=['GET'])
 def Home():
     return render_template('index.html')
 
-
-standard_to = StandardScaler()
 @app.route("/predict", methods=['POST'])
 def predict():
 
