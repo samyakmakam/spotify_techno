@@ -13,7 +13,7 @@ import category_encoders as ce
 import zipfile
 import os
 app = Flask(__name__)
-model = pickle.load(open('techncolabs_model.pkl', 'rb'))
+model = pickle.load(open('rf.pkl', 'rb'))
 @app.route('/',methods=['GET'])
 def Home():
     return render_template('index.html')
