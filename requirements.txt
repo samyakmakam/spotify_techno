@@ -6,3 +6,4 @@ requests>=2.25.1
 numpy>=1.19.5
 category_encoders>=2.2.2
 scikit_learn>=0.24.1
+pickle
